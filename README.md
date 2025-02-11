@@ -109,4 +109,4 @@ python train_rf.py  # Train Random Forest model
 
 ---
 
-📢 **Acknowledgment**: Thanks to [Dataset Author] for making this dataset publicly available.
+📢 **Acknowledgment**: Thanks to [Jeferson Menegazzo] for making this dataset publicly available.
