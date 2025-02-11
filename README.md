@@ -50,12 +50,12 @@ This project explores **road conditions and vehicle behavior prediction** using 
 | Task                          | Assigned To     |
 | ----------------------------- | --------------- |
 | Data Cleaning & Preprocessing | [Issa Ennab]    |
-| LSTM Model Implementation     | [?]             |
+| LSTM Model Implementation     | [Ajmal Jalal]   |
 | Random Forest Model           | [?]             |
 | Third Model Implementation    | [?]             |
 | Tableau Visualizations        | [Issa Ennab]    |
 | Model Comparison & Report     | [?]             |
-| API Integration (FastAPI)     | [?]             |
+| API Integration (FastAPI)     | [Ajmal Jalal]   |
 | PowerPoint & Presentation     | [Issa Ennab, ?] |
 
 ---
