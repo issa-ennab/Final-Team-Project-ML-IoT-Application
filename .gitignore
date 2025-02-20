@@ -40,7 +40,7 @@ datastore/
 
 # Ignore model files and large generated files
 *.h5
-*.keras
 *.pth
 *.onnx
 *.ckpt
+*.pkl
