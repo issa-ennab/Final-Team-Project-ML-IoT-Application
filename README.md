@@ -55,11 +55,12 @@ This project explores **road conditions and vehicle behavior prediction** using 
 | Data Cleaning & Preprocessing | [Issa Ennab]              |
 | LSTM Model Implementation     | [Ajmal Jalal]             |
 | Random Forest Model           | [Mani Katuri]             |
-| Third Model Implementation    | [?]                       |
+| Third Model Implementation    | [Issa Ennab]              |
 | Tableau Visualizations        | [Issa Ennab]              |
+| IoT Design Diagram            | [?]                       |
 | Model Comparison & Report     | [Mani Katuri]             |
 | API Integration (FastAPI)     | [Ajmal Jalal]             |
-| PowerPoint & Presentation     | [Issa Ennab, Mani Katuri] |
+| A Few Presentation Slides     | [Issa Ennab, Mani Katuri] |
 
 ---
 
