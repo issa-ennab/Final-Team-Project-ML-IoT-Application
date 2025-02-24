@@ -1,0 +1,103 @@
+/* Custom styles to enhance the UI */
+
+/* Smooth transitions */
+.transition {
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar for code blocks */
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E0 #EDF2F7;
+}
+
+pre::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: #EDF2F7;
+  border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #CBD5E0;
+  border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: #A0AEC0;
+}
+
+/* File input label hover effect */
+label[for="lstm-file"]:hover,
+label[for="rf-file"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Result cards animation */
+#lstm-result,
+#rf-result {
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+#lstm-result:not(.hidden),
+#rf-result:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Container max-width for better readability */
+.container {
+  max-width: 1200px;
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+  }
+}
+
+/* Card hover effect */
+.bg-white {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Prediction text animation */
+#lstm-prediction,
+#rf-prediction,
+#lstm-confidence,
+#rf-confidence {
+  transition: color 0.3s ease;
+}
+
+/* Loading state for file upload */
+.uploading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Error state */
+.error {
+  color: #E53E3E;
+  border-color: #E53E3E;
+  background-color: #FFF5F5;
+}
