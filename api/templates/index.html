@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Condition Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <style>
+      .gradient-bg {
+        background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+      }
+
+      .card-hover {
+        transition: transform 0.2s;
+      }
+
+      .card-hover:hover {
+        transform: translateY(-5px);
+      }
+
+      .upload-btn {
+        transition: all 0.3s;
+      }
+
+      .upload-btn:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 min-h-screen">
+    <div class="gradient-bg py-4 mb-8 shadow-md">
+      <header class="container mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold text-white mb-4 animate__animated animate__fadeIn">Road Condition Prediction</h1>
+        <p class="text-white text-xl opacity-90">Analyze your sensor data for accurate road condition assessment</p>
+      </header>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <!-- LSTM Model Card -->
+        <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+          <div class="flex items-center mb-6">
+            <div class="bg-blue-100 rounded-full p-3 mr-4">
+              <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                </path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">LSTM Model</h2>
+          </div>
+          <p class="text-gray-600 mb-6">
+            Our advanced LSTM model analyzes patterns in your sensor data over time for highly accurate predictions.
+          </p>
+          {% if lstm_available %}
+          <div class="mb-6">
+            <input type="file" id="lstm-file" accept=".json" class="hidden">
+            <label for="lstm-file"
+              class="upload-btn inline-block cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+              Upload Your Data
+            </label>
+          </div>
+          <div id="lstm-result" class="hidden">
+            <div class="bg-gray-100 p-4 rounded">
+              <p class="font-semibold">Prediction:</p>
+              <p id="lstm-prediction" class="text-lg text-blue-600"></p>
+              <p class="font-semibold mt-2">Confidence:</p>
+              <p id="lstm-confidence" class="text-lg text-blue-600"></p>
+            </div>
+          </div>
+          <div id="lstm-error" class="hidden">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <p id="lstm-error-message"></p>
+            </div>
+          </div>
+          {% else %}
+          <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+            <p>LSTM model is currently unavailable. Please check if the model file exists and is properly formatted.</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Random Forest Model Card -->
+        <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+          <div class="flex items-center mb-6">
+            <div class="bg-green-100 rounded-full p-3 mr-4">
+              <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+                </path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">Random Forest Model</h2>
+          </div>
+          <p class="text-gray-600 mb-6">
+            Get instant predictions using our Random Forest model, perfect for real-time analysis of current conditions.
+          </p>
+          {% if rf_available %}
+          <div class="mb-6">
+            <input type="file" id="rf-file" accept=".json" class="hidden">
+            <label for="rf-file"
+              class="upload-btn inline-block cursor-pointer bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+              Upload Your Data
+            </label>
+          </div>
+          <div id="rf-result" class="hidden">
+            <div class="bg-gray-100 p-4 rounded">
+              <p class="font-semibold">Prediction:</p>
+              <p id="rf-prediction" class="text-lg text-green-600"></p>
+              <p class="font-semibold mt-2">Confidence:</p>
+              <p id="rf-confidence" class="text-lg text-green-600"></p>
+            </div>
+          </div>
+          <div id="rf-error" class="hidden">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <p id="rf-error-message"></p>
+            </div>
+          </div>
+          {% else %}
+          <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+            <p>Random Forest model is currently unavailable. Please check if the model file exists.</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- GRU Model Card -->
+        <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+          <div class="flex items-center mb-6">
+            <div class="bg-indigo-100 rounded-full p-3 mr-4">
+              <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                </path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">GRU Model</h2>
+          </div>
+          <p class="text-gray-600 mb-6">
+            Our optimized GRU model provides fast and accurate predictions with lower computational overhead compared to
+            LSTM.
+          </p>
+          {% if gru_available %}
+          <div class="mb-6">
+            <input type="file" id="gru-file" accept=".json" class="hidden">
+            <label for="gru-file"
+              class="upload-btn inline-block cursor-pointer bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+              Upload Your Data
+            </label>
+          </div>
+          <div id="gru-result" class="hidden">
+            <div class="bg-gray-100 p-4 rounded">
+              <p class="font-semibold">Prediction:</p>
+              <p id="gru-prediction" class="text-lg text-indigo-600"></p>
+              <p class="font-semibold mt-2">Confidence:</p>
+              <p id="gru-confidence" class="text-lg text-indigo-600"></p>
+            </div>
+          </div>
+          <div id="gru-error" class="hidden">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <p id="gru-error-message"></p>
+            </div>
+          </div>
+          {% else %}
+          <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+            <p>GRU model is currently unavailable. Please check if the model file exists.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Data Format Guide -->
+      <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+        <div class="flex items-center mb-6">
+          <div class="bg-purple-100 rounded-full p-3 mr-4">
+            <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+              </path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">How to Prepare Your Data</h2>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-gray-600">
+            Your data file should be in JSON format and include sensor readings from your device. Here's what you need:
+          </p>
+
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold text-gray-700 mb-2">Required Sensor Measurements:</h3>
+            <ul class="list-disc list-inside space-y-2 text-gray-600">
+              <li><span class="font-medium">Left Accelerometer:</span> X, Y, and Z measurements from the left sensor
+              </li>
+              <li><span class="font-medium">Right Accelerometer:</span> X, Y, and Z measurements from the right sensor
+              </li>
+              <li><span class="font-medium">Gyroscope:</span> X, Y, and Z rotation measurements</li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold text-gray-700 mb-2">Data Structure Example:</h3>
+            <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+{
+    "readings": [
+        // Each row contains 9 values in this order:
+        [
+            // Left Accelerometer
+            left_accelerometer_x,  // X-axis reading
+            left_accelerometer_y,  // Y-axis reading
+            left_accelerometer_z,  // Z-axis reading
+            
+            // Right Accelerometer
+            right_accelerometer_x, // X-axis reading
+            right_accelerometer_y, // Y-axis reading
+            right_accelerometer_z, // Z-axis reading
+            
+            // Gyroscope
+            gyroscope_x,          // X-axis rotation
+            gyroscope_y,          // Y-axis rotation
+            gyroscope_z           // Z-axis rotation
+        ],
+        // For LSTM model: Include 20 consecutive readings
+        // For Random Forest: Include just 1 reading
+    ]
+}</pre>
+          </div>
+
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <p class="text-yellow-800">
+              <span class="font-semibold">Note:</span> For the LSTM model, provide 20 consecutive timesteps of readings.
+              For the Random Forest model, a single reading is sufficient.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function handleFileUpload(file, modelType) {
+        const resultDiv = document.getElementById(`${modelType}-result`);
+        const errorDiv = document.getElementById(`${modelType}-error`);
+        const errorMessage = document.getElementById(`${modelType}-error-message`);
+
+        // Hide previous results and errors
+        resultDiv.classList.add('hidden');
+        errorDiv.classList.add('hidden');
+
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          try {
+            const data = JSON.parse(e.target.result);
+            const response = await fetch(`/predict/${modelType}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+              throw new Error(result.detail || 'Prediction failed');
+            }
+
+            // Show results
+            resultDiv.classList.remove('hidden');
+            document.getElementById(`${modelType}-prediction`).textContent = result.road_type;
+            document.getElementById(`${modelType}-confidence`).textContent =
+              `${(result.confidence * 100).toFixed(2)}%`;
+          } catch (error) {
+            // Show error message
+            errorDiv.classList.remove('hidden');
+            errorMessage.textContent = error.message;
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      // LSTM file input handler
+      const lstmInput = document.getElementById('lstm-file');
+      if (lstmInput) {
+        lstmInput.addEventListener('change', function (e) {
+          if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0], 'lstm');
+          }
+        });
+      }
+
+      // Random Forest file input handler
+      const rfInput = document.getElementById('rf-file');
+      if (rfInput) {
+        rfInput.addEventListener('change', function (e) {
+          if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0], 'rf');
+          }
+        });
+      }
+
+      // GRU file input handler
+      const gruInput = document.getElementById('gru-file');
+      if (gruInput) {
+        gruInput.addEventListener('change', function (e) {
+          if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0], 'gru');
+          }
+        });
+      }
+    </script>
+  </body>
+
+</html>

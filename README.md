@@ -60,7 +60,6 @@ This project explores **road conditions and vehicle behavior prediction** using 
 | IoT Design Diagram            | [?]                       |
 | Model Comparison & Report     | [Mani Katuri]             |
 | API Integration (FastAPI)     | [Ajmal Jalal]             |
-| A Few Presentation Slides     | [Issa Ennab, Mani Katuri] |
 
 ---
 
